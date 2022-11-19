@@ -38,29 +38,38 @@ go build main.go
 
 <li>
 
-<strong>Let's run a main.exe to create a project</strong>
+<strong>Usage</strong>
 
 You need to move a `main.exe` to the destination that you want to establish the project before you execute it
 
 ```
-main init my-project
+main [init|i|-command] [project-name]
 ```
-or
+</li>
+
+</li>
+
+<li>
+
+<strong>Command List</strong>
+
 ```
-main i my-project
+-module
+-m
 ```
 </li>
 
 <li>
 
-<strong>Generate a Module</strong>
+<strong>Example</strong>
 
+Initialize a new project
 ```
-main -module module-name
+main i my-project
 ```
-or
+Generate a new module **(Need to init a project first)**
 ```
-main -m module-name
+main -m users
 ```
 </li>
 </ul>
@@ -79,7 +88,6 @@ main -m module-name
 📂 internals/
 ├─ 📂 servers/
 │  ├─ 📄 server.go
-│  ├─ 📄 handler.go
 ├─ 📂 entities/
 │  ├─ 📄 books.go
 ├─ 📂 books/
