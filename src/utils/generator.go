@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/Rayato159/clean-arch-cli/models"
 )
@@ -68,14 +69,61 @@ func CreateFile(projectName string, list map[string]models.FileInfo) {
 		if !list[i].IsExist && !list[i].IsDir {
 			switch i {
 			case fmt.Sprintf("%s/.gitignore", projectName):
-				GitignoreCreator(projectName)
+				CreateGitignore(projectName)
 			case fmt.Sprintf("%s/.env.dev", projectName):
-				DotEnvCreator(projectName, "dev")
+				CreateDotEnv(projectName, "dev")
 			case fmt.Sprintf("%s/.env.test", projectName):
-				DotEnvCreator(projectName, "test")
+				CreateDotEnv(projectName, "test")
 			case fmt.Sprintf("%s/.env.prod", projectName):
-				DotEnvCreator(projectName, "prod")
+				CreateDotEnv(projectName, "prod")
 			}
 		}
+	}
+}
+
+func GetProjectName() string {
+	// Check wether pwd is already in project?
+	files, err := ioutil.ReadDir("./")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	if len(files) == 0 {
+		log.Fatal("error, project not found")
+	}
+	var fileStack string
+	for i := range files {
+		if files[i].Name() != "main.exe" && files[i].IsDir() {
+			fileStack = files[i].Name()
+			break
+		}
+	}
+	if fileStack == "" {
+		log.Fatal("error, project must be a folder")
+	}
+	return files[0].Name()
+}
+
+func BeforeCreateModuleChecK(projectName, name string) {
+	// Check a module name
+	path := fmt.Sprintf("./%s/modules", projectName)
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	for i := range files {
+		if files[i].Name() == name {
+			log.Fatalf("error, module: %s is already exist", name)
+		}
+	}
+}
+
+func CreateModule(name string) {
+	projectName := GetProjectName()
+	BeforeCreateModuleChecK(projectName, name)
+
+	// Mkdir for module
+	path := filepath.Join(projectName, "modules", name)
+	if err := os.Mkdir(path, os.FileMode(0777)); err != nil {
+		log.Fatalf("error, can't create a dir with an error: %v", err.Error())
 	}
 }

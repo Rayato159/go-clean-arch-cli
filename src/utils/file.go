@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func GitignoreCreator(projectName string) {
+func CreateGitignore(projectName string) {
 	data := `# Binaries for programs and plugins
 *.exe
 *.exe~
@@ -51,7 +51,7 @@ vendor
 	}
 }
 
-func DotEnvCreator(projectName string, state string) {
+func CreateDotEnv(projectName string, state string) {
 	data := fmt.Sprintf(`STAGE=%s
 APP_HOST=
 APP_PORT=
