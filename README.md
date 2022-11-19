@@ -45,8 +45,24 @@ You need to move a `main.exe` to the destination that you want to establish the 
 ```
 main init my-project
 ```
+or
+
 ```
 main i my-project
+```
+</li>
+
+<li>
+
+<strong>Generate a Module</strong>
+
+```
+main -module module-name
+```
+or
+
+```
+main -m module-name
 ```
 </li>
 </ul>
