@@ -1,13 +1,21 @@
 package utils
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/Rayato159/clean-arch-cli/models"
+)
+
+type GeneratorContext string
+
+const (
+	GeneratorCall GeneratorContext = "GeneratorCall"
 )
 
 func ListDir(ls models.DefaultFileAndFolderListInterface) map[string]models.FileInfo {
@@ -26,7 +34,11 @@ func ListDir(ls models.DefaultFileAndFolderListInterface) map[string]models.File
 	return filesMap
 }
 
-func CreateListInit(projectName string) {
+func CreateListInit(ctx context.Context, projectName string) {
+	ctx = context.WithValue(ctx, GeneratorCall, time.Now().UnixMilli())
+	log.Printf("called:\t%v", ctx)
+	defer log.Printf("return:\t%v", ctx)
+
 	ls := models.NewDefaultFileAndFolderList()
 	ls.SetGetDefaultFileAndFolderList(projectName)
 	list := ListDir(ls)
@@ -37,6 +49,13 @@ func CreateListInit(projectName string) {
 	}
 	CreateDir(projectName, list)
 	CreateFile(projectName, list)
+
+	// Go mod init
+	// cmd := exec.Command(fmt.Sprintf("go mod init %s", projectName))
+	// cmd.Dir = "./" + projectName
+	// if err := cmd.Run(); err != nil {
+	// 	log.Fatal(err)
+	// }
 }
 
 func CreateDir(projectName string, list map[string]models.FileInfo) {
@@ -49,6 +68,28 @@ func CreateDir(projectName string, list map[string]models.FileInfo) {
 				dir := []string{
 					fmt.Sprintf("%s/logs", i),
 					fmt.Sprintf("%s/screenshots", i),
+				}
+				for j := range dir {
+					if err := os.MkdirAll(dir[j], os.FileMode(0777)); err != nil {
+						log.Fatalf("error, can't create a dir with an error: %v", err.Error())
+					}
+				}
+			case fmt.Sprintf("%s/app", projectName):
+				if err := os.MkdirAll(i, os.FileMode(0777)); err != nil {
+					log.Fatalf("error, can't create a dir with an error: %v", err.Error())
+				}
+				CreateMain(projectName)
+			case fmt.Sprintf("%s/modules", projectName):
+				destination := filepath.Join(projectName, "modules", "servers")
+				if err := os.MkdirAll(destination, os.FileMode(0777)); err != nil {
+					log.Fatalf("error, can't create a dir with an error: %v", err.Error())
+				}
+				CreateServerModule(destination)
+			case fmt.Sprintf("%s/package", projectName):
+				dir := []string{
+					fmt.Sprintf("%s/databases", i),
+					fmt.Sprintf("%s/middlewares", i),
+					fmt.Sprintf("%s/utils", i),
 				}
 				for j := range dir {
 					if err := os.MkdirAll(dir[j], os.FileMode(0777)); err != nil {
@@ -100,7 +141,7 @@ func GetProjectName() string {
 	if fileStack == "" {
 		log.Fatal("error, project must be a folder")
 	}
-	return files[0].Name()
+	return fileStack
 }
 
 func BeforeCreateModuleChecK(projectName, name string) {
@@ -117,13 +158,37 @@ func BeforeCreateModuleChecK(projectName, name string) {
 	}
 }
 
-func CreateModule(name string) {
+func CreateModule(ctx context.Context, name string) {
+	ctx = context.WithValue(ctx, GeneratorCall, time.Now().UnixMilli())
+	log.Printf("called:\t%v", ctx)
+	defer log.Printf("return:\t%v", ctx)
+
 	projectName := GetProjectName()
 	BeforeCreateModuleChecK(projectName, name)
 
 	// Mkdir for module
-	path := filepath.Join(projectName, "modules", name)
-	if err := os.Mkdir(path, os.FileMode(0777)); err != nil {
+	destination := filepath.Join(projectName, "modules", name)
+	if err := os.Mkdir(destination, os.FileMode(0777)); err != nil {
 		log.Fatalf("error, can't create a dir with an error: %v", err.Error())
 	}
+
+	// Nested mkdir for module
+	destinationModuleInternal := []string{
+		"entities",
+		"repositories",
+		"usecases",
+		"controllers",
+	}
+	for i := range destinationModuleInternal {
+		destination := filepath.Join(projectName, "modules", name, destinationModuleInternal[i])
+		if err := os.Mkdir(destination, os.FileMode(0777)); err != nil {
+			log.Fatalf("error, can't create a dir with an error: %v", err.Error())
+		}
+	}
+
+	// Create module
+	CreateEntitiy(destination, name)
+	CreateRepository(destination, name)
+	CreateUsecase(destination, name)
+	CreateController(destination, name)
 }

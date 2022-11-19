@@ -57,8 +57,8 @@ APP_HOST=
 APP_PORT=
 APP_REQUEST_TIMEOUT=
 
-DB_HOST=0.0.0.0
-DB_PORT=7890
+DB_HOST=
+DB_PORT=
 DB_DATABASE=
 DB_USERNAME=
 DB_PASSWORD=
@@ -66,6 +66,23 @@ DB_PASSWORD=
 FILE_LOG_PATH=./assets/logs`, state)
 
 	fileName := fmt.Sprintf("%s/.env.%s", projectName, state)
+	err := ioutil.WriteFile(fileName, []byte(data), 0777)
+	if err != nil {
+		log.Fatalf("error, can't create a file: %v, with an error: %v", fileName, err.Error())
+	}
+}
+
+func CreateMain(projectName string) {
+	data := `package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("hello, clean arch cli")
+}
+`
+
+	fileName := fmt.Sprintf("%s/app/main.go", projectName)
 	err := ioutil.WriteFile(fileName, []byte(data), 0777)
 	if err != nil {
 		log.Fatalf("error, can't create a file: %v, with an error: %v", fileName, err.Error())
