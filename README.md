@@ -23,6 +23,7 @@
 ```
 git clone https://github.com/Rayato159/go-clean-arch-cli
 ```
+
 </li>
 
 <li>
@@ -43,8 +44,9 @@ go build main.go
 You need to move a `main.exe` to the destination that you want to establish the project before you execute it
 
 ```
-main [init|i|-command] [project-name]
+main [command] [project-name|module-name]
 ```
+
 </li>
 
 </li>
@@ -53,10 +55,11 @@ main [init|i|-command] [project-name]
 
 <strong>Command List</strong>
 
-```
--module
--m
-```
+| Command | Short Term | Prefix | Description                 |
+| ------- | ---------- | ------ | --------------------------- |
+| init    | i          | none   | To initialize a new project |
+| module  | m          | -      | To generate a new module    |
+
 </li>
 
 <li>
@@ -64,13 +67,17 @@ main [init|i|-command] [project-name]
 <strong>Example</strong>
 
 Initialize a new project
+
 ```
 main i my-project
 ```
+
 Generate a new module **(Need to init a project first)**
+
 ```
 main -m users
 ```
+
 </li>
 </ul>
 
@@ -106,4 +113,5 @@ main -m users
 📄 .env.prod
 📄 .env.test
 ```
+
 </ul>
