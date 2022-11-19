@@ -80,11 +80,18 @@ func CreateDir(projectName string, list map[string]models.FileInfo) {
 				}
 				CreateMain(projectName)
 			case fmt.Sprintf("%s/modules", projectName):
-				destination := filepath.Join(projectName, "modules", "servers")
-				if err := os.MkdirAll(destination, os.FileMode(0777)); err != nil {
+				// Create entities folder
+				destinationEntities := filepath.Join(projectName, "modules", "entities")
+				if err := os.MkdirAll(destinationEntities, os.FileMode(0777)); err != nil {
 					log.Fatalf("error, can't create a dir with an error: %v", err.Error())
 				}
-				CreateServerModule(destination)
+
+				// Create servers module folder
+				destinationServers := filepath.Join(projectName, "modules", "servers")
+				if err := os.MkdirAll(destinationServers, os.FileMode(0777)); err != nil {
+					log.Fatalf("error, can't create a dir with an error: %v", err.Error())
+				}
+				CreateServerModule(destinationServers)
 			case fmt.Sprintf("%s/package", projectName):
 				dir := []string{
 					fmt.Sprintf("%s/databases", i),
@@ -174,7 +181,6 @@ func CreateModule(ctx context.Context, name string) {
 
 	// Nested mkdir for module
 	destinationModuleInternal := []string{
-		"entities",
 		"repositories",
 		"usecases",
 		"controllers",
@@ -187,7 +193,7 @@ func CreateModule(ctx context.Context, name string) {
 	}
 
 	// Create module
-	CreateEntitiy(destination, name)
+	CreateEntitiy(filepath.Join(projectName, "modules", "entities"), name)
 	CreateRepository(destination, name)
 	CreateUsecase(destination, name)
 	CreateController(destination, name)

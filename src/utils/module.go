@@ -22,7 +22,7 @@ const (
 type _Repository interface {}
 type _Usecase interface {}`, "_", strings.Title(name)), "-", name)
 
-	fileName := fmt.Sprintf("%s/entities/%s", destination, fmt.Sprintf("%s_entity.go", name))
+	fileName := fmt.Sprintf("%s/%s", destination, fmt.Sprintf("%s_entity.go", name))
 	err := ioutil.WriteFile(fileName, []byte(data), 0777)
 	if err != nil {
 		log.Fatalf("error, can't create a file: %v, with an error: %v", fileName, err.Error())
