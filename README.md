@@ -46,7 +46,6 @@ You need to move a `main.exe` to the destination that you want to establish the 
 main init my-project
 ```
 or
-
 ```
 main i my-project
 ```
@@ -60,7 +59,6 @@ main i my-project
 main -module module-name
 ```
 or
-
 ```
 main -m module-name
 ```
@@ -86,11 +84,11 @@ main -m module-name
 │  ├─ 📄 books.go
 ├─ 📂 books/
 │  ├─ 📂 controllers/
-│  │  ├─ 📄 book_controllers.go
+│  │  ├─ 📄 book_controller.go
 │  ├─ 📂 usecases/
-│  │  ├─ 📄 book_usecases.go
+│  │  ├─ 📄 book_usecase.go
 │  ├─ 📂 repositories/
-│  │  ├─ 📄 book_repositories.go
+│  │  ├─ 📄 book_repository.go
 📂 package/
 ├─ 📂 databases/
 ├─ 📂 middlewares/
