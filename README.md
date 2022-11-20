@@ -44,7 +44,7 @@ go build main.go
 You need to move a `main.exe` to the destination that you want to establish the project before you execute it
 
 ```
-main [command] [project-name|module-name]
+main [command] [project-name] [optional]
 ```
 
 </li>
@@ -75,7 +75,7 @@ main i my-project
 Generate a new module **(Need to init a project first)**
 
 ```
-main -m users
+main -m my-project users
 ```
 
 </li>

@@ -30,11 +30,25 @@ func main() {
 		}
 		utils.CreateListInit(ctx, os.Args[2])
 	case "-module":
-		moduleName := strings.ToLower(os.Args[2])
-		utils.CreateModule(ctx, moduleName)
+		if os.Args[2] == "" {
+			log.Fatalf("error, missing project name")
+		}
+		if os.Args[3] == "" {
+			log.Fatalf("error, missing module name")
+		}
+		moduleName := strings.ToLower(os.Args[3])
+		projectName := os.Args[2]
+		utils.CreateModule(ctx, projectName, moduleName)
 	case "-m":
-		moduleName := strings.ToLower(os.Args[2])
-		utils.CreateModule(ctx, moduleName)
+		if os.Args[2] == "" {
+			log.Fatalf("error, missing project name")
+		}
+		if os.Args[3] == "" {
+			log.Fatalf("error, missing module name")
+		}
+		moduleName := strings.ToLower(os.Args[3])
+		projectName := os.Args[2]
+		utils.CreateModule(ctx, projectName, moduleName)
 	default:
 		log.Fatalf("error, unknown command: %v", os.Args[1])
 	}

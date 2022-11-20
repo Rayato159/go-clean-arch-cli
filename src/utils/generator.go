@@ -165,12 +165,14 @@ func BeforeCreateModuleChecK(projectName, name string) {
 	}
 }
 
-func CreateModule(ctx context.Context, name string) {
+func CreateModule(ctx context.Context, projectName, name string) {
 	ctx = context.WithValue(ctx, GeneratorCall, time.Now().UnixMilli())
 	log.Printf("called:\t%v", ctx)
 	defer log.Printf("return:\t%v", ctx)
 
-	projectName := GetProjectName()
+	if projectName == "" {
+		projectName = GetProjectName()
+	}
 	BeforeCreateModuleChecK(projectName, name)
 
 	// Mkdir for module
